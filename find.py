@@ -15,8 +15,8 @@ stateLock = threading.Lock()
 
 class website:
     """
-    This class handles URL formatting
-    And checking if the website is online
+    Sedang menangani pemformatan URL
+    Done... Memeriksa Apakah Website Ini Aktif...
     """
 
     def __init__(self, data):
@@ -30,52 +30,52 @@ class website:
         print("[?] Checking if is website online")
         statusCode = self.checkStatus(self.address)
         if statusCode == 200:
-            print("[+] Website seem online!")
+            print("[+] Situs web terlihat aktif!")
         elif statusCode == 404:
-            print("[-] Website seem down")
+            print("[-] Situs web terlihat down")
             exit()
         else:
-            print("[?] Received HTTP Code : ", statusCode)
+            print("[?] Gagal... website dirancang anti finder : ", statusCode)
             exit()
 
         self.checkRobot(self.address)
 
     def checkStatus(self, address):
-        """ This function returns the status of the website """
+        """ Fungsi ini mengembalikan status situs web """
         try:
             return urllib.urlopen(address).getcode()
         except IOError:
-            print("[!] Something wrong with your address")
+            print("[!] Gagal... Pastikan url anda valid.")
             exit()
 
 
     def checkRobot(self,address):
         """
-        This function is to check if robots.txt/robot.txt exist and see if the
-        Admin path is already in there
+        Sedang memeriksa apakah robots.txt/robot.txt ada
+        Baik... Jalur admin sudah ada di sana!
         """
-        print("[?] Checking for robot file")
+        print("[?] Sedang Memeriksa file robot...")
         path = ["robot.txt","robots.txt"]
         urls = [address + i for i in path]
 
         for url in urls:
             statusCode = self.checkStatus(url)
             if statusCode == 200:
-                print("\n[+] %s \n[+] Exists, reading content" % url)
+                print("\n[+] %s \n[+] Terlihat Ada, membaca konten..." % url)
                 info = self.parseDir(url)
                 if info:
-                    print("[=] Interesting Information found in robot file")
+                    print("[=] Informasi menarik ditemukan di file robot!")
                     print("="*80)
                     for line in info:
                         print "\t"+line
                     print("="*80)
 
                     try:
-                        raw_input("[+] Ctrl + C to stop")
+                        raw_input("[+] Tekan Ctrl + C untuk berhentikan program")
                     except KeyboardInterrupt:
                         os._exit(1)
                 else:
-                    print("[-] Nothing useful found in robot file")
+                    print("[-] Tidak ada yang berguna ditemukan di file robot :(")
 
     def getPage(self, address):
         return urllib.urlopen(address).readlines()
@@ -101,17 +101,17 @@ class website:
         return interestingInfo
 
 class wordlist:
-    """ This function loads the wordlsit """
+    """ Sedang memuat wordlist... """
     def __init__(self):
         try:
             # read the file and remove \n at the line ending
             self.load = [i.replace('\n', '') for i in open('wordlist.txt').readlines()]
         except IOError:
-            print("[!] I/O Error, wordlist.txt not found")
+            print("[!] I/O Kesalahan, wordlist.txt Tidak ditemukan")
 
 
 class scanThread(threading.Thread):
-    """ This class is the blueprint used to generate threads """
+    """ Kelas ini adalah cetak biru yang digunakan untuk menghasilkan thread """
     def __init__(self, q):
         threading.Thread.__init__(self)
         self.queue = q
@@ -124,10 +124,10 @@ class scanThread(threading.Thread):
             stateLock.release()
             if self.online(url):
                 stateLock.acquire()
-                print("\n\n[+] Admin page found in %.2f seconds" % (time.time() - starttime))
+                print("\n\n[+] Selesai! Halaman Admin Ditermukan dalam waktu %.2f detik" % (time.time() - starttime))
                 print("[=] %s" % url)
-                raw_input("[+] Press Enter to exit")
-                print("[+] Exiting Program")
+                raw_input("[+] Tekan enter untuk keluar!")
+                print("[+] Siap Laksanakan! Keluar dari Program...")
                 os._exit(1)
 
             else:
@@ -138,12 +138,12 @@ class scanThread(threading.Thread):
             # Release task completed status
 
     def online(self, url):
-        """ Returns True if the url is online AKA HTTP status code == 200 """
+        """ Mengembalikan True jika urlnya online AKA kode status HTTP == 200 """
         try:
             return urllib.urlopen(url).getcode() == 200
         except IOError:
             stateLock.acquire()
-            print("[!] Name Resolution Error")
+            print("[!] Kesalahan Resolusi Nama")
             stateLock.release()
 
 
@@ -151,12 +151,12 @@ def main():
     try:
         pathlist = wordlist().load
         # loads the wordlist
-        address = website(raw_input("[+] Website to scan : ")).address
+        address = website(raw_input("[+] Berikan website yang ingin di scan : ")).address
         mainApp(address, pathlist)
         # Runs the main Application
     except KeyboardInterrupt:
-        print("\n[-] Ctrl + C Detected")
-        print("[-] Exiting")
+        print("\n[-] Ctrl + C Terdeteksi!")
+        print("[-] Keluar...")
         os._exit(1)
 
 
@@ -174,7 +174,7 @@ def progressBar(q):
         elif currentProgress > 95:
             bar = symbol * maxlinesize
         remaining = emptySymbol * (maxlinesize - len(bar))
-        line = "\rProgress : [%s%s] %.2f%%" % (bar,remaining,currentProgress)
+        line = "\rTunggu! Sedang mencari... : [%s%s] %.2f%%" % (bar,remaining,currentProgress)
         #line = "\rو︻̷┻̿═━一 [%s%s] %.2f%%" % (bar, remaining,currentProgress)
         threading.Thread(target=printoutput,args=(line,)).start()
         # sys.stdout.write(line)
@@ -199,8 +199,8 @@ class mainApp:
 
     def createJobs(self):
         """
-        Joins website address with the admin paths from wordlist
-        and add it to queue
+        Bergabung dengan alamat situs web dengan jalur admin dari wordlist
+        dan tambahkan ke antrian
         """
         self.queue = Queue.Queue()
         stateLock.acquire()
@@ -210,13 +210,13 @@ class mainApp:
 
     def run(self):
         try:
-            print("[!] Press Ctrl + Z to stop while scanning")
-            threadCount = raw_input("[+] Enter number of threads [10]: ")
+            print("[!] Tekan Ctrl + Z untuk berhenti saat memindai")
+            threadCount = raw_input("[+] Masukkan jumlah thread max 20! : ")
             if not threadCount:
-                print("[=] Number of threads = 10")
+                print("[=] Jumlah thread = 20")
                 threadCount = 20
             else:
-                print("[=] Number of threads = %d" % int(threadCount))
+                print("[=] Jumlah thread = %d" % int(threadCount))
 
             threadList = []
             global starttime
@@ -233,15 +233,15 @@ class mainApp:
                 thread.start()
             # Waiting for all threads to finish
             self.queue.join()
-            print("\n\n[=] Time elasped : %.2f seconds" % float(time.time()-starttime))
-            print("[-] Admin page not found!")
+            print("\n\n[=] Waktu berlalu selama : %.2f detik" % float(time.time()-starttime))
+            print("[-] Maaf... halaman admim tidak ketemu!")
             progressbar.join()
             for thread in threadList:
                 thread.join()
         except KeyboardInterrupt:
             stateLock.acquire()
-            print("\n[~] Ctrl + C Detected!")
-            print("[~] Exiting")
+            print("\n[~] Ctrl + C Terdeteksi!")
+            print("[~] Keluar...")
             os._exit(1)
 
 if __name__ == "__main__":
