@@ -27,7 +27,7 @@ class website:
             site = site + "/"
         self.address = site
 
-        print("[?] Checking if is website online")
+        print("[?] Memeriksa apakah situs web aktif")
         statusCode = self.checkStatus(self.address)
         if statusCode == 200:
             print("[+] Situs web terlihat aktif!")
