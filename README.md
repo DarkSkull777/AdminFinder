@@ -1,6 +1,6 @@
 # Step by step
-pkg upgrade
-pkg update
+\npkg upgrade
+pkg update\n
 pkg install git
 pkg install python2
 pip2 install requests
