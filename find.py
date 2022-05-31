@@ -75,7 +75,7 @@ class website:
                     except KeyboardInterrupt:
                         os._exit(1)
                 else:
-                    print("[-] Tidak ada yang berguna ditemukan di file robot :(")
+                    print("[-] Tidak ada yang berguna ditemukan di file robot! melanjutkan program...")
 
     def getPage(self, address):
         return urllib.urlopen(address).readlines()
@@ -210,7 +210,7 @@ class mainApp:
 
     def run(self):
         try:
-            print("[!] Tekan Ctrl + Z untuk berhenti saat memindai")
+            print("[!] - XSkull7 Tools")
             threadCount = raw_input("[+] Masukkan jumlah thread max 20! : ")
             if not threadCount:
                 print("[=] Jumlah thread = 20")
