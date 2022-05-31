@@ -45,7 +45,7 @@ class website:
         try:
             return urllib.urlopen(address).getcode()
         except IOError:
-            print("[!] Gagal... Pastikan url anda valid.")
+            print("[!] Gagal... Pastikan url anda tidak valid.")
             exit()
 
 
